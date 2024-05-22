@@ -3,11 +3,9 @@ package fr.sncf.d2d.colibri.persistence;
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
 public class InMemParcelRepository extends InMemCrudRepository<Parcel> implements ParcelRepository {
 
     @Override

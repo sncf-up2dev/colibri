@@ -1,6 +1,6 @@
 package fr.sncf.d2d.colibri.domain.parcels;
 
-import fr.sncf.d2d.colibri.domain.common.Entity;
+import fr.sncf.d2d.colibri.domain.common.Model;
 
 import java.util.Objects;
 import java.util.Set;
@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Postal parcel.
  */
-public class Parcel implements Entity  {
+public class Parcel implements Model {
     private String id;
     private String address;
     private final double weight;

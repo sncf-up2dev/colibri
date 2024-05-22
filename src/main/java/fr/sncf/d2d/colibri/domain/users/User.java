@@ -1,12 +1,12 @@
 package fr.sncf.d2d.colibri.domain.users;
 
-import fr.sncf.d2d.colibri.domain.common.Entity;
+import fr.sncf.d2d.colibri.domain.common.Model;
 
 public record User(
     String username,
     String password,
     Role role
-) implements Entity {
+) implements Model {
 
     @Override
     public String getId() {

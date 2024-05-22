@@ -4,10 +4,8 @@ import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,14 +50,14 @@ public class ParcelController {
         @RequestBody ParcelModificationPayload payload
     ) {
         Parcel parcel = this.service.update(id, p -> {
-            payload.address.ifPresent(p::setAddress);
-            payload.status.ifPresent(p::setStatus);
-            payload.postmanId.ifPresent(p::setPostmanId);
+            payload.address.ifAvailable(p::setAddress);
+            payload.status.ifAvailable(p::setStatus);
+            payload.postmanId.ifAvailable(p::setPostmanId);
         });
         return ParcelPayload.from(parcel);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void delete(
             @PathVariable String id
     ) {

@@ -1,6 +1,6 @@
 package fr.sncf.d2d.colibri.domain.common;
 
-public interface Entity {
+public interface Model {
 
     String getId();
 }

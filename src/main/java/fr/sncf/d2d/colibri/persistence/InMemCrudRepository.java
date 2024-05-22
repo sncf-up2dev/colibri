@@ -1,8 +1,8 @@
 package fr.sncf.d2d.colibri.persistence;
 
 import fr.sncf.d2d.colibri.domain.common.ConflictException;
-import fr.sncf.d2d.colibri.domain.common.CrudRepository;
-import fr.sncf.d2d.colibri.domain.common.Entity;
+import fr.sncf.d2d.colibri.domain.common.BaseCrudRepository;
+import fr.sncf.d2d.colibri.domain.common.Model;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class InMemCrudRepository<T extends Entity> implements CrudRepository<T> {
+public class InMemCrudRepository<T extends Model> implements BaseCrudRepository<T> {
 
     Map<String, T> data = new HashMap<>();
 

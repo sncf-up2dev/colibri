@@ -2,7 +2,6 @@ package fr.sncf.d2d.colibri.rest.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public sealed interface Omissible<T>
@@ -14,28 +13,17 @@ public sealed interface Omissible<T>
     }
 
     @JsonCreator
-    static <T> Omissible<T> of(T value) {
-        return value == null ? na() : Available.of(value);
+    static <T> Available<T> of(T value) {
+        return new Available<>(value);
     }
 
-    default void ifPresent(Consumer<T> consumer) {
-        if (this instanceof Omissible.Available<T> available) {
-            consumer.accept(available.value);
+    default void ifAvailable(Consumer<T> consumer) {
+        if (this instanceof Omissible.Available(T value)) {
+            consumer.accept(value);
         }
     }
 
-    final class Available<T> implements Omissible<T> {
-        private final T value;
-
-        private Available(T value) {
-            this.value = value;
-        }
-
-        public static <T> Available<T> of(T value) {
-            Objects.requireNonNull(value);
-            return new Available<>(value);
-        }
-    }
+    record Available<T>(T value) implements Omissible<T> {}
 
     final class NotAvailable<T> implements Omissible<T> {
         private static final NotAvailable<?> INSTANCE = new NotAvailable<>();
