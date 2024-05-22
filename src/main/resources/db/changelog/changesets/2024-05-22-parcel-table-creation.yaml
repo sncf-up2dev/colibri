@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-05-22-parcel-table-creation
+      author: Ahmad
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  constraints:
+                      - primaryKey: true
+              - column:
+                  name: address
+                  type: varchar(255)
+              - column:
+                  name: weight
+                  type: double
+              - column:
+                  name: postmanId
+                  type: varchar(255)
+              - column:
+                  name: trackingCode
+                  type: varchar(255)
+              - column:
+                    name: status
+                    type: varchar(255)
+            tableName: Parcel
