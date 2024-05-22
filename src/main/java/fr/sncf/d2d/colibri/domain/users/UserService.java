@@ -1,6 +1,7 @@
 package fr.sncf.d2d.colibri.domain.users;
 
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,9 +11,14 @@ import java.util.function.Consumer;
 public class UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository) {
+    public UserService(
+            UserRepository repository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User retrieve(String id) {
@@ -27,10 +33,14 @@ public class UserService {
         this.repository.delete(id);
     }
 
-    public void update(String id, Consumer<User> updater) {
-        User user = this.repository.retrieve(id).orElseThrow(NotFoundException::new);
+    public User update(String id, Consumer<User> updater) {
+        User user = this.repository.retrieve(id)
+                .orElseThrow(() -> new NotFoundException("Username %s already exists".formatted(id)));
         updater.accept(user);
-        this.repository.update(user);
+        if (user.getPassword() != null) {
+            user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        }
+        return this.repository.update(user);
     }
 
     public User create(User user) {

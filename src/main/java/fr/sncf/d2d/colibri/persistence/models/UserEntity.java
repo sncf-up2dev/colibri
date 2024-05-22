@@ -46,9 +46,9 @@ public final class UserEntity {
 
     public static UserEntity from(User user) {
         UserEntity entity = new UserEntity();
-        entity.setUsername(user.username());
-        entity.setPassword(user.password());
-        entity.setRole(user.role());
+        entity.setUsername(user.getUsername());
+        entity.setPassword(user.getPassword());
+        entity.setRole(user.getRole());
         return entity;
     }
 }

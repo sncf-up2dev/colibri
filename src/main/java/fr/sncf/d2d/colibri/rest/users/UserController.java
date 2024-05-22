@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,9 +40,27 @@ public class UserController {
     @PostMapping
     public UserPayload create(
             @RequestBody
-            UserPayload payload
+            UserModificationPayload payload
     ) {
         User user = this.service.create(payload.toUser());
+        return UserPayload.from(user);
+    }
+
+    @RequestMapping(method = { RequestMethod.PATCH, RequestMethod.PUT }, path = "/{id}")
+    public UserPayload update(
+            @PathVariable
+            String id,
+            @RequestBody
+            UserModificationPayload payload
+    ) {
+        User user = this.service.update(id, model -> {
+            if (payload.role() != null) {
+                model.setRole(payload.role());
+            }
+            if (payload.password() != null) {
+                model.setPassword(payload.password());
+            }
+        });
         return UserPayload.from(user);
     }
 
