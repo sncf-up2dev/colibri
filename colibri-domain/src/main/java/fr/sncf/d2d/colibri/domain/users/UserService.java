@@ -1,7 +1,6 @@
 package fr.sncf.d2d.colibri.domain.users;
 
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
