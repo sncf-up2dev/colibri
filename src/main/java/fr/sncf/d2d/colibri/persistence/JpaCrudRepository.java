@@ -1,7 +1,9 @@
 package fr.sncf.d2d.colibri.persistence;
 
 import fr.sncf.d2d.colibri.domain.common.BaseCrudRepository;
+import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.Model;
+import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
@@ -31,12 +33,17 @@ public interface JpaCrudRepository<M extends Model, E>
 
     @Override
     default M create(M model) {
+        if (this.existsById(model.getId())) {
+            throw new ConflictException("Model with ID %s already exists.".formatted(model.getId()));
+        }
         return this.toModel(this.save(toEntity(model)));
     }
 
     @Override
     default void delete(String id) {
-        this.deleteById(id);
+        E entity = this.findById(id).orElseThrow(() ->
+                new NotFoundException("No model found with ID %s.".formatted(id)));
+        this.delete(entity);
     }
 
     @Override

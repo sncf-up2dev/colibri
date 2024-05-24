@@ -2,6 +2,7 @@ package fr.sncf.d2d.colibri.rest.parcels;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class ParcelController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ParcelPayload create(
             @RequestBody
             ParcelCreationPayload payload
@@ -58,6 +61,7 @@ public class ParcelController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(
             @PathVariable String id
     ) {

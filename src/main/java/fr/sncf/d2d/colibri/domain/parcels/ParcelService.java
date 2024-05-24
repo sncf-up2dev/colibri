@@ -36,7 +36,7 @@ public class ParcelService {
         Parcel.Status oldStatus = parcel.getStatus();
         updater.accept(parcel);
         Parcel.Status newStatus = parcel.getStatus();
-        if (oldStatus != newStatus && !oldStatus.canSucceed(oldStatus)) {
+        if (oldStatus != newStatus && !newStatus.canSucceed(oldStatus)) {
             throw new IllegalOperationException("Status %s cannot succeed %s.".formatted(newStatus, oldStatus));
         }
         return this.repository.update(parcel);

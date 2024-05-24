@@ -5,7 +5,7 @@ import fr.sncf.d2d.colibri.domain.users.Role;
 import fr.sncf.d2d.colibri.domain.users.User;
 import fr.sncf.d2d.colibri.domain.users.UserService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +42,7 @@ public class AppUserService implements UserDetailsService {
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
                     user.getPassword(),
-                    user.getRole().getImpliedRoles().stream().map(Enum::name).map(SimpleGrantedAuthority::new).toList()
+                    AuthorityUtils.createAuthorityList(user.getRole().getAuthorities())
             );
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException("Username %s not found!".formatted(username), e);
