@@ -1,7 +1,6 @@
-package fr.sncf.d2d.colibri.persistence;
+package fr.sncf.d2d.colibri.domain.users;
 
-import fr.sncf.d2d.colibri.domain.users.User;
-import fr.sncf.d2d.colibri.domain.users.UserRepository;
+import fr.sncf.d2d.colibri.domain.common.InMemCrudRepository;
 
 public class InMemUserRepository extends InMemCrudRepository<User> implements UserRepository {
 

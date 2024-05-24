@@ -1,8 +1,7 @@
-package fr.sncf.d2d.colibri.persistence;
+package fr.sncf.d2d.colibri.domain.parcels;
 
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
-import fr.sncf.d2d.colibri.domain.parcels.Parcel;
-import fr.sncf.d2d.colibri.domain.parcels.ParcelRepository;
+import fr.sncf.d2d.colibri.domain.common.InMemCrudRepository;
 
 import java.util.UUID;
 
