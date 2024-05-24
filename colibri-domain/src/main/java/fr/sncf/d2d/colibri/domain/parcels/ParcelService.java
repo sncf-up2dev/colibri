@@ -1,8 +1,8 @@
 package fr.sncf.d2d.colibri.domain.parcels;
 
+import fr.sncf.d2d.colibri.domain.common.Service;
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.Base64;
 import java.util.List;

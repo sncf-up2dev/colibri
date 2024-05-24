@@ -12,12 +12,4 @@
     <artifactId>colibri-domain</artifactId>
     <name>Colibri Domain</name>
     <description>Colibri business logic</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-    </dependencies>
-
 </project>

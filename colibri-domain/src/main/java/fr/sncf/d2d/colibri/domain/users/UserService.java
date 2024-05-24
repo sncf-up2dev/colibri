@@ -1,7 +1,7 @@
 package fr.sncf.d2d.colibri.domain.users;
 
+import fr.sncf.d2d.colibri.domain.common.Service;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.function.Consumer;
