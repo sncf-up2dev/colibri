@@ -1,6 +1,6 @@
 package fr.sncf.d2d.colibri.domain.users;
 
-public interface PasswordEncoder {
+public interface PasswordEncryptor {
 
     String encode(String password);
 }

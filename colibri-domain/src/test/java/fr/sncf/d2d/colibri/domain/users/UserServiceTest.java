@@ -1,12 +1,13 @@
 package fr.sncf.d2d.colibri.domain.users;
 
-import fr.sncf.d2d.colibri.domain.common.Base64PasswordEncoder;
+import fr.sncf.d2d.colibri.domain.common.Base64PasswordEncryptor;
 import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,8 +17,9 @@ class UserServiceTest {
 
     UserRepository repository = new InMemUserRepository();
     UserService sut = new UserService(
+            Logger.getAnonymousLogger(),
             repository,
-            new Base64PasswordEncoder()
+            new Base64PasswordEncryptor()
     );
 
     @Test

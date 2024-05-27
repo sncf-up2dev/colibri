@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +18,7 @@ class ParcelServiceTest {
 
     ParcelRepository repository = new InMemParcelRepository();
     ParcelService sut = new ParcelService(
+            Logger.getAnonymousLogger(),
             repository
     );
 

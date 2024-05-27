@@ -15,15 +15,15 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-@EnableConfigurationProperties(AppConfiguration.class)
+@EnableConfigurationProperties(ColibriConfiguration.class)
 public class AppUserService implements UserDetailsService {
 
     private final UserService userService;
-    private final AppConfiguration configuration;
+    private final ColibriConfiguration configuration;
     private final PasswordEncoder passwordEncoder;
 
     public AppUserService(
-            AppConfiguration configuration,
+            ColibriConfiguration configuration,
             UserService userService,
             PasswordEncoder passwordEncoder
     ) {
@@ -36,8 +36,8 @@ public class AppUserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             User user = Optional.ofNullable(this.configuration.superuser())
-                    .filter(u -> username.equals(u.getUsername()))
-                    .map(u -> new User(u.getUsername(), passwordEncoder.encode(u.getPassword()), Role.ADMIN))
+                    .filter(u -> username.equals(u.username()))
+                    .map(u -> new User(u.username(), passwordEncoder.encode(u.password()), Role.ADMIN))
                     .orElseGet(() -> this.userService.retrieve(username));
             return new org.springframework.security.core.userdetails.User(
                     user.getUsername(),
