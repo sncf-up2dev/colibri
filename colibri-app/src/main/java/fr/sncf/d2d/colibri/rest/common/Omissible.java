@@ -17,17 +17,24 @@ public sealed interface Omissible<T>
         return new Available<>(value);
     }
 
-    default void ifAvailable(Consumer<T> consumer) {
-        if (this instanceof Omissible.Available(T value)) {
+    void ifAvailable(Consumer<T> consumer);
+
+    record Available<T>(T value) implements Omissible<T> {
+
+        @Override
+        public void ifAvailable(Consumer<T> consumer) {
             consumer.accept(value);
         }
     }
-
-    record Available<T>(T value) implements Omissible<T> {}
 
     final class NotAvailable<T> implements Omissible<T> {
         private static final NotAvailable<?> INSTANCE = new NotAvailable<>();
 
         private NotAvailable() {}
+
+        @Override
+        public void ifAvailable(Consumer<T> consumer) {
+            // Do nothing
+        }
     }
 }
