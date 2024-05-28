@@ -1,9 +1,10 @@
 package fr.sncf.d2d.colibri.rest.parcels;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
+import jakarta.validation.constraints.NotBlank;
 
 public record ParcelCreationPayload(
-    String address,
+    @NotBlank String address,
     double weight,
     String postmanId
 ) {

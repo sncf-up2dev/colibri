@@ -2,6 +2,7 @@ package fr.sncf.d2d.colibri.rest.parcels;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +41,7 @@ public class ParcelController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ParcelPayload create(
-            @RequestBody
-            ParcelCreationPayload payload
+            @Valid @RequestBody ParcelCreationPayload payload
     ) {
         Parcel parcel = this.service.create(payload.toParcel());
         return ParcelPayload.from(parcel);
@@ -50,7 +50,7 @@ public class ParcelController {
     @RequestMapping(method = { RequestMethod.PATCH, RequestMethod.PUT }, path = "/{id}")
     public ParcelPayload update(
         @PathVariable String id,
-        @RequestBody ParcelModificationPayload payload
+        @Valid @RequestBody ParcelModificationPayload payload
     ) {
         Parcel parcel = this.service.update(id, p -> {
             payload.address.ifAvailable(p::setAddress);

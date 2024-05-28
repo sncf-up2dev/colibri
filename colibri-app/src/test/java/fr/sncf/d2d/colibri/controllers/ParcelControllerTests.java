@@ -92,6 +92,21 @@ public class ParcelControllerTests {
     }
 
     @Test
+    @WithMockUserRole(Role.POSTMAN)
+    void test_create_parcel_bad_address() throws Exception {
+        String body = """
+                {
+                    "address": "",
+                    "weight": 3.14
+                }
+                """;
+        mvc.perform(post("/parcels")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @WithMockUserRole(Role.USER)
     void test_create_parcel_forbidden() throws Exception {
         String address = "13 rue de Bonheur 99000 Ailleurs";
@@ -227,6 +242,20 @@ public class ParcelControllerTests {
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.weight").value(weight))
                 .andExpect(jsonPath("$.status").value("TRANSIT"));
+    }
+
+    @Test
+    @WithMockUserRole(Role.POSTMAN)
+    void test_update_parcel_bad_address() throws Exception {
+        String body = """
+                {
+                    "address": ""
+                }
+                """;
+        mvc.perform(patch("/parcels/an_id")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
     }
 
     @Test

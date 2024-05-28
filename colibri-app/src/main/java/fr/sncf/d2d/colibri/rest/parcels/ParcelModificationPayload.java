@@ -2,10 +2,11 @@ package fr.sncf.d2d.colibri.rest.parcels;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.rest.common.Omissible;
+import jakarta.validation.constraints.NotBlank;
 
 public class ParcelModificationPayload {
 
-    Omissible<String> address = Omissible.na();
+    Omissible<@NotBlank String> address = Omissible.na();
     Omissible<Parcel.Status> status = Omissible.na();
     Omissible<String> postmanId = Omissible.na();
 
