@@ -1,9 +1,11 @@
 package fr.sncf.d2d.colibri.controllers;
 
-import fr.sncf.d2d.colibri.domain.users.Role;
 import fr.sncf.d2d.colibri.domain.users.AppUser;
+import fr.sncf.d2d.colibri.domain.users.Role;
 import fr.sncf.d2d.colibri.test.extensions.WithMockUserRole;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -127,6 +129,59 @@ public class AppUserControllerTests {
                 .andExpect(status().isForbidden());
     }
 
+
+    @ParameterizedTest
+    @ValueSource(strings = { "user name", "_username", "user#name", "1username" })
+    @WithMockUserRole(Role.ADMIN)
+    void test_create_user_bad_username(String username) throws Exception {
+        String body = """
+                {
+                    "username": "%s",
+                    "password": "pa55w0rd",
+                    "role": "USER"
+                }
+                """.formatted(username);
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "psswrd", "I love SNCF" })
+    @WithMockUserRole(Role.ADMIN)
+    void test_create_user_bad_password(String password) throws Exception {
+        AppUser user = randomUser();
+        String body = """
+                {
+                    "username": "%s",
+                    "password": "%s",
+                    "role": "USER"
+                }
+                """.formatted(user.getUsername(), password);
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUserRole(Role.ADMIN)
+    void test_create_user_password_contains_username() throws Exception {
+        AppUser user = randomUser();
+        String body = """
+                {
+                    "username": "%s",
+                    "password": "I love %s",
+                    "role": "USER"
+                }
+                """.formatted(user.getUsername(), user.getUsername());
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_get_user() throws Exception {
@@ -206,6 +261,21 @@ public class AppUserControllerTests {
                 .andExpect(jsonPath("$.password").doesNotExist());
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = { "psswrd", "I love SNCF" })
+    @WithMockUserRole(Role.ADMIN)
+    void test_update_user_bad_username(String password) throws Exception {
+        String body = """
+                {
+                    "password": "%s"
+                }
+                """.formatted(password);
+        mvc.perform(patch("/users/a_user")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(body))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_update_user_not_found() throws Exception {
@@ -237,7 +307,7 @@ public class AppUserControllerTests {
 
     private AppUser randomUser() {
         return new AppUser(
-                UUID.randomUUID().toString(),
+                "user_%s".formatted(UUID.randomUUID().toString().replace("-", "")),
                 UUID.randomUUID().toString(),
                 Role.USER
         );

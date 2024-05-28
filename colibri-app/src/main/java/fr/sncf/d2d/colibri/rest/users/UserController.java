@@ -2,6 +2,7 @@ package fr.sncf.d2d.colibri.rest.users;
 
 import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,8 +43,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserPayload create(
-            @RequestBody
-            UserModificationPayload payload
+            @Valid @RequestBody UserCreationPayload payload
     ) {
         AppUser user = this.service.create(payload.toAppUser());
         return UserPayload.from(user);
@@ -51,18 +51,12 @@ public class UserController {
 
     @RequestMapping(method = { RequestMethod.PATCH, RequestMethod.PUT }, path = "/{id}")
     public UserPayload update(
-            @PathVariable
-            String id,
-            @RequestBody
-            UserModificationPayload payload
+            @PathVariable String id,
+            @Valid @RequestBody UserModificationPayload payload
     ) {
         AppUser user = this.service.update(id, model -> {
-            if (payload.role() != null) {
-                model.setRole(payload.role());
-            }
-            if (payload.password() != null) {
-                model.setPassword(payload.password());
-            }
+            payload.getRole().ifAvailable(model::setRole);
+            payload.getPassword().ifAvailable(model::setPassword);
         });
         return UserPayload.from(user);
     }
