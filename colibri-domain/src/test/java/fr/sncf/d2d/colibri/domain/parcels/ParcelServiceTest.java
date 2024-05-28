@@ -1,9 +1,6 @@
 package fr.sncf.d2d.colibri.domain.parcels;
 
-import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
-import fr.sncf.d2d.colibri.domain.users.Role;
-import fr.sncf.d2d.colibri.domain.users.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

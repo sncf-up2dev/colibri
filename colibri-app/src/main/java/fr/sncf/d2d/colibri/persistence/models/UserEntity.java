@@ -3,13 +3,16 @@ package fr.sncf.d2d.colibri.persistence.models;
 import fr.sncf.d2d.colibri.domain.users.Role;
 import fr.sncf.d2d.colibri.domain.users.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity(name = "AppUser")
 public final class UserEntity {
     @Id
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public String getId() {

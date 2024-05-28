@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240528-parcel-table-creation
+      author: Ahmad
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                      - primaryKey: true
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: role
+                  type: varchar(255)
+            tableName: app_user

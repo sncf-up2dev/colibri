@@ -2,14 +2,17 @@ package fr.sncf.d2d.colibri.persistence.models;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
-@Entity
+@Entity(name = "Parcel")
 public final class ParcelEntity {
     @Id
     String id;
     String address;
     double weight;
+    @Enumerated(EnumType.STRING)
     Parcel.Status status;
     String postmanId;
     String trackingCode;
