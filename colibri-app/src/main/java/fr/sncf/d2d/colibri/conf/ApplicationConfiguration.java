@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.logging.Logger;
 
 @Configuration
-public class ApplicationConfigurations {
+public class ApplicationConfiguration {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
