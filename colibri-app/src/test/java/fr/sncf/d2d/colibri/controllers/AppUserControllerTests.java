@@ -1,7 +1,7 @@
 package fr.sncf.d2d.colibri.controllers;
 
 import fr.sncf.d2d.colibri.domain.users.Role;
-import fr.sncf.d2d.colibri.domain.users.User;
+import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.test.extensions.WithMockUserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class UserControllerTests {
+public class AppUserControllerTests {
 
     @Autowired
     MockMvc mvc;
@@ -40,7 +40,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_get_all_users_not_empty() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -73,7 +73,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_create_user() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -92,7 +92,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_create_user_conflict() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -113,7 +113,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.POSTMAN)
     void test_create_user_forbidden() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -130,7 +130,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_get_user() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -152,14 +152,14 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_get_user_not_found() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         mvc.perform(get("/users/%s".formatted(user.getUsername())))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void test_get_user_unauthorized() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         mvc.perform(get("/users/%s".formatted(user.getUsername())))
                 .andExpect(status().isUnauthorized());
     }
@@ -167,7 +167,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.POSTMAN)
     void test_get_user_forbidden() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         mvc.perform(get("/users/%s".formatted(user.getUsername())))
                 .andExpect(status().isForbidden());
     }
@@ -175,7 +175,7 @@ public class UserControllerTests {
     @Test
     @WithMockUserRole(Role.ADMIN)
     void test_update_user() throws Exception {
-        User user = randomUser();
+        AppUser user = randomUser();
         String body = """
                 {
                     "username": "%s",
@@ -235,8 +235,8 @@ public class UserControllerTests {
                 .andExpect(status().isForbidden());
     }
 
-    private User randomUser() {
-        return new User(
+    private AppUser randomUser() {
+        return new AppUser(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 Role.USER

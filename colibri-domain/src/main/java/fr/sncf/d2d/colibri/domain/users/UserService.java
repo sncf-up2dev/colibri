@@ -24,12 +24,12 @@ public class UserService {
         this.passwordEncryptor = passwordEncryptor;
     }
 
-    public User retrieve(String id) {
+    public AppUser retrieve(String id) {
         this.logger.info(() -> "Retrieving user with username %s.".formatted(id));
         return this.repository.retrieve(id).orElseThrow(NotFoundException::new);
     }
 
-    public List<User> retrieve() {
+    public List<AppUser> retrieve() {
         this.logger.info("Retrieving all users.");
         return this.repository.retrieve();
     }
@@ -39,9 +39,9 @@ public class UserService {
         this.repository.delete(id);
     }
 
-    public User update(String id, Consumer<User> updater) {
+    public AppUser update(String id, Consumer<AppUser> updater) {
         this.logger.info(() -> "Updating user with username %s.".formatted(id));
-        User user = this.repository.retrieve(id)
+        AppUser user = this.repository.retrieve(id)
                 .orElseThrow(() -> new NotFoundException("Username %s already exists".formatted(id)));
         updater.accept(user);
         if (user.getPassword() != null) {
@@ -50,7 +50,7 @@ public class UserService {
         return this.repository.update(user);
     }
 
-    public User create(User user) {
+    public AppUser create(AppUser user) {
         this.logger.info("Creating new user.");
         return this.repository.create(user);
     }

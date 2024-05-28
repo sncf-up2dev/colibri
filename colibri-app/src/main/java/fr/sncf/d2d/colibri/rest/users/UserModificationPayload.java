@@ -1,7 +1,7 @@
 package fr.sncf.d2d.colibri.rest.users;
 
 import fr.sncf.d2d.colibri.domain.users.Role;
-import fr.sncf.d2d.colibri.domain.users.User;
+import fr.sncf.d2d.colibri.domain.users.AppUser;
 
 public record UserModificationPayload(
         String username,
@@ -9,7 +9,7 @@ public record UserModificationPayload(
         Role role
 ) {
 
-    public User toUser() {
-        return new User(username, password, role);
+    public AppUser toAppUser() {
+        return new AppUser(username, password, role);
     }
 }

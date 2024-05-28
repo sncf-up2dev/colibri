@@ -2,10 +2,11 @@ package fr.sncf.d2d.colibri.conf;
 
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import fr.sncf.d2d.colibri.domain.users.Role;
-import fr.sncf.d2d.colibri.domain.users.User;
+import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,11 +36,11 @@ public class AppUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            User user = Optional.ofNullable(this.configuration.superuser())
+            AppUser user = Optional.ofNullable(this.configuration.superuser())
                     .filter(u -> username.equals(u.username()))
-                    .map(u -> new User(u.username(), passwordEncoder.encode(u.password()), Role.ADMIN))
+                    .map(u -> new AppUser(u.username(), passwordEncoder.encode(u.password()), Role.ADMIN))
                     .orElseGet(() -> this.userService.retrieve(username));
-            return new org.springframework.security.core.userdetails.User(
+            return new User(
                     user.getUsername(),
                     user.getPassword(),
                     AuthorityUtils.createAuthorityList(user.getRole().getAuthorities())

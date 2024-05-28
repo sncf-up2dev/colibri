@@ -2,12 +2,12 @@ package fr.sncf.d2d.colibri.domain.users;
 
 import fr.sncf.d2d.colibri.domain.common.Model;
 
-public class User implements Model {
+public class AppUser implements Model {
     private final String username;
     private String password;
     private Role role;
 
-    public User(
+    public AppUser(
             String username,
             String password,
             Role role

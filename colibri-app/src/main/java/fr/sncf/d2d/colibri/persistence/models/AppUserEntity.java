@@ -1,14 +1,14 @@
 package fr.sncf.d2d.colibri.persistence.models;
 
 import fr.sncf.d2d.colibri.domain.users.Role;
-import fr.sncf.d2d.colibri.domain.users.User;
+import fr.sncf.d2d.colibri.domain.users.AppUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
 @Entity(name = "AppUser")
-public final class UserEntity {
+public final class AppUserEntity {
     @Id
     private String username;
     private String password;
@@ -43,12 +43,12 @@ public final class UserEntity {
         this.role = role;
     }
 
-    public User toUser() {
-        return new User(this.username, this.password, this.role);
+    public AppUser toUser() {
+        return new AppUser(this.username, this.password, this.role);
     }
 
-    public static UserEntity from(User user) {
-        UserEntity entity = new UserEntity();
+    public static AppUserEntity from(AppUser user) {
+        AppUserEntity entity = new AppUserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         entity.setRole(user.getRole());

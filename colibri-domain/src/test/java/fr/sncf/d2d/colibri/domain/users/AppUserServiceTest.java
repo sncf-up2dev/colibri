@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class UserServiceTest {
+class AppUserServiceTest {
 
     UserRepository repository = new InMemUserRepository();
     UserService sut = new UserService(
@@ -25,10 +25,10 @@ class UserServiceTest {
     @Test
     void retrieveOne() {
         // Given
-        User user = randomUser();
+        AppUser user = randomUser();
         this.sut.create(user);
         // When
-        User retrieved = this.sut.retrieve(user.getUsername());
+        AppUser retrieved = this.sut.retrieve(user.getUsername());
         // Then
         assertThat(retrieved)
                 .usingComparator(this::compareUsers)
@@ -44,20 +44,20 @@ class UserServiceTest {
     @Test
     void testRetrieveAll() {
         // Given
-        List<User> user = Stream.generate(this::randomUser).limit(10).toList();
+        List<AppUser> user = Stream.generate(this::randomUser).limit(10).toList();
         user.forEach(this.sut::create);
         // When
-        List<User> retrieved = this.sut.retrieve();
+        List<AppUser> retrieved = this.sut.retrieve();
         // Then
         assertThat(retrieved)
-                .usingComparatorForType(this::compareUsers, User.class)
+                .usingComparatorForType(this::compareUsers, AppUser.class)
                 .isSubsetOf(user);
     }
 
     @Test
     void delete() {
         // Given
-        User user = randomUser();
+        AppUser user = randomUser();
         this.sut.create(user);
         // When
         this.sut.delete(user.getUsername());
@@ -75,12 +75,12 @@ class UserServiceTest {
     @Test
     void update() {
         // Given
-        User user = randomUser();
+        AppUser user = randomUser();
         this.sut.create(user);
         // When
         this.sut.update(user.getUsername(), u -> u.setRole(Role.POSTMAN));
         // Then
-        User retrieved = this.sut.retrieve(user.getUsername());
+        AppUser retrieved = this.sut.retrieve(user.getUsername());
         assertThat(retrieved.getRole()).isEqualTo(Role.POSTMAN);
     }
 
@@ -93,14 +93,14 @@ class UserServiceTest {
     @Test
     void create() {
         // Given
-        User user = randomUser();
+        AppUser user = randomUser();
         // When
-        User created = this.sut.create(user);
+        AppUser created = this.sut.create(user);
         // Then
         assertThat(created)
                 .usingComparator(this::compareUsers)
                 .isEqualTo(user);
-        User retrieved = this.sut.retrieve(user.getUsername());
+        AppUser retrieved = this.sut.retrieve(user.getUsername());
         assertThat(retrieved)
                 .usingComparator(this::compareUsers)
                 .isEqualTo(user);
@@ -109,20 +109,20 @@ class UserServiceTest {
     @Test
     void createConflict() {
         // Given
-        User user = randomUser();
+        AppUser user = randomUser();
         this.sut.create(user);
         // When, Then
         assertThatThrownBy(() -> this.sut.create(user))
                 .isInstanceOf(ConflictException.class);
     }
 
-    int compareUsers(User u1, User u2) {
+    int compareUsers(AppUser u1, AppUser u2) {
         return u1.getUsername().equals(u2.getUsername()) &&
                 u1.getRole() == u2.getRole() ? 0 : -1;
     }
 
-    User randomUser() {
-        return new User(
+    AppUser randomUser() {
+        return new AppUser(
                 UUID.randomUUID().toString(),
                 UUID.randomUUID().toString(),
                 Role.USER

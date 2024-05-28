@@ -1,6 +1,6 @@
 package fr.sncf.d2d.colibri.rest.users;
 
-import fr.sncf.d2d.colibri.domain.users.User;
+import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +45,7 @@ public class UserController {
             @RequestBody
             UserModificationPayload payload
     ) {
-        User user = this.service.create(payload.toUser());
+        AppUser user = this.service.create(payload.toAppUser());
         return UserPayload.from(user);
     }
 
@@ -56,7 +56,7 @@ public class UserController {
             @RequestBody
             UserModificationPayload payload
     ) {
-        User user = this.service.update(id, model -> {
+        AppUser user = this.service.update(id, model -> {
             if (payload.role() != null) {
                 model.setRole(payload.role());
             }
