@@ -54,4 +54,10 @@ public final class AppUserEntity {
         entity.setRole(user.getRole());
         return entity;
     }
+
+    public static AppUserEntity fromUsername(String username) {
+        AppUserEntity user = new AppUserEntity();
+        user.setUsername(username);
+        return user;
+    }
 }

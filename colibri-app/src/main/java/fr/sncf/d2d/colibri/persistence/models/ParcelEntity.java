@@ -5,6 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
+import java.util.Optional;
 
 @Entity(name = "Parcel")
 public final class ParcelEntity {
@@ -14,7 +18,8 @@ public final class ParcelEntity {
     double weight;
     @Enumerated(EnumType.STRING)
     Parcel.Status status;
-    String postmanId;
+    @ManyToOne @JoinColumn(name = "postman_id")
+    AppUserEntity postman;
     String trackingCode;
 
     public String getId() {
@@ -49,12 +54,12 @@ public final class ParcelEntity {
         this.status = status;
     }
 
-    public String getPostmanId() {
-        return postmanId;
+    public AppUserEntity getPostman() {
+        return postman;
     }
 
-    public void setPostmanId(String postmanId) {
-        this.postmanId = postmanId;
+    public void setPostman(AppUserEntity postman) {
+        this.postman = postman;
     }
 
     public String getTrackingCode() {
@@ -66,12 +71,15 @@ public final class ParcelEntity {
     }
 
     public static ParcelEntity from(Parcel parcel) {
+        AppUserEntity userEntity = Optional.ofNullable(parcel.getPostmanId())
+                .map(AppUserEntity::fromUsername)
+                .orElse(null);
         ParcelEntity entity = new ParcelEntity();
         entity.setId(parcel.getId());
         entity.setAddress(parcel.getAddress());
         entity.setWeight(parcel.getWeight());
         entity.setStatus(parcel.getStatus());
-        entity.setPostmanId(parcel.getPostmanId());
+        entity.setPostman(userEntity);
         entity.setTrackingCode(parcel.getTrackingCode());
         return entity;
     }
@@ -82,7 +90,7 @@ public final class ParcelEntity {
                 .address(address)
                 .weight(weight)
                 .status(status)
-                .postmanId(postmanId)
+                .postmanId(postman == null ? null : postman.getId())
                 .trackingCode(trackingCode)
                 .build();
     }
