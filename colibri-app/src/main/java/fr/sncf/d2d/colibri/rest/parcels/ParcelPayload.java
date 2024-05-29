@@ -10,7 +10,7 @@ public record ParcelPayload(
         String address,
         double weight,
         Parcel.Status status,
-        String officerId,
+        String postmanId,
         String trackingCode
 ) {
     public static ParcelPayload from(Parcel parcel) {
