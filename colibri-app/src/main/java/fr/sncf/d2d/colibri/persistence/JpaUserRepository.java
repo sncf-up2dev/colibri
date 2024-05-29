@@ -3,19 +3,25 @@ package fr.sncf.d2d.colibri.persistence;
 import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserRepository;
 import fr.sncf.d2d.colibri.persistence.models.AppUserEntity;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JpaUserRepository
-        extends JpaCrudRepository<AppUser, AppUserEntity>, UserRepository {
+public class JpaUserRepository
+        extends JpaCrudRepository<AppUser, AppUserEntity>
+        implements UserRepository {
+
+    protected JpaUserRepository(CrudRepository<AppUserEntity, String> crudRepository) {
+        super(crudRepository);
+    }
 
     @Override
-    default AppUser toModel(AppUserEntity entity) {
+    public AppUser toModel(AppUserEntity entity) {
         return entity.toUser();
     }
 
     @Override
-    default AppUserEntity toEntity(AppUser model) {
+    public AppUserEntity toEntity(AppUser model) {
         return AppUserEntity.from(model);
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static fr.sncf.d2d.colibri.test.extensions.RequestPostProcessors.userRole;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.not;
@@ -242,6 +244,94 @@ public class ParcelControllerTests {
                 .andExpect(jsonPath("$.address").value(address))
                 .andExpect(jsonPath("$.weight").value(weight))
                 .andExpect(jsonPath("$.status").value("TRANSIT"));
+    }
+
+    @Test
+    @WithMockUserRole(Role.POSTMAN)
+    void test_update_parcel_modifying_postman() throws Exception {
+        // Given
+        String address = "13 rue de Bonheur 99000 Ailleurs";
+        double weight = 3.14;
+        String create = """
+                {
+                    "address": "%s",
+                    "weight": %f
+                }
+                """.formatted(address, weight);
+        String responseStr = mvc.perform(post("/parcels")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(create))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        record WithId(String id) {}
+        String id = objectMapper.readValue(responseStr, WithId.class).id;
+        String username = UUID.randomUUID().toString().replaceAll("-", "");
+        String user = """
+                {
+                    "username": "%s",
+                    "password": "pa55w0rd",
+                    "role": "POSTMAN"
+                }
+                """.formatted(username);
+        mvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .with(userRole(Role.ADMIN))
+                        .content(user))
+                .andExpect(status().isCreated());
+
+        // When
+        String update = """
+                {
+                    "postmanId": "%s"
+                }
+                """.formatted(username);
+        mvc.perform(patch("/parcels/%s".formatted(id))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(update))
+                .andExpect(status().isOk());
+        // Then
+        mvc.perform(get("/parcels/%s".formatted(id)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.address").value(address))
+                .andExpect(jsonPath("$.weight").value(weight))
+                .andExpect(jsonPath("$.postmanId").value(username));
+    }
+
+    @Test
+    @WithMockUserRole(Role.POSTMAN)
+    void test_update_parcel_modifying_postman_non_existing() throws Exception {
+        // Given
+        String address = "13 rue de Bonheur 99000 Ailleurs";
+        double weight = 3.14;
+        String create = """
+                {
+                    "address": "%s",
+                    "weight": %f
+                }
+                """.formatted(address, weight);
+        String responseStr = mvc.perform(post("/parcels")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(create))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        record WithId(String id) {}
+        String id = objectMapper.readValue(responseStr, WithId.class).id;
+        String username = UUID.randomUUID().toString().replaceAll("-", "");
+        // When
+        String update = """
+                {
+                    "postmanId": "%s"
+                }
+                """.formatted(username);
+        mvc.perform(patch("/parcels/%s".formatted(id))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(update))
+                // Then
+                .andExpect(status().isNotFound());
     }
 
     @Test
