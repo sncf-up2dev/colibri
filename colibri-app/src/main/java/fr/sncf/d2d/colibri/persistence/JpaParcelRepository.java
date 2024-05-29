@@ -1,16 +1,15 @@
 package fr.sncf.d2d.colibri.persistence;
 
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
-import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelRepository;
+import fr.sncf.d2d.colibri.persistence.errors.MapException;
 import fr.sncf.d2d.colibri.persistence.models.ParcelEntity;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+@MapException
 @Repository
 public interface JpaParcelRepository
         extends JpaCrudRepository<Parcel, ParcelEntity>, ParcelRepository {
@@ -21,16 +20,7 @@ public interface JpaParcelRepository
             throw new IllegalOperationException("Parcel ID cannot be provided on creation");
         }
         model.setId(UUID.randomUUID().toString());
-        try {
-            return this.toModel(this.save(toEntity(model)));
-        } catch (EntityNotFoundException e) {
-            throw new NotFoundException("Entity not found", e);
-        } catch (DataAccessException e) {
-            if (e.getCause() instanceof EntityNotFoundException) {
-                throw new NotFoundException("Entity not found", e.getCause());
-            }
-            throw e;
-        }
+        return this.toModel(this.save(toEntity(model)));
     }
 
     @Override
