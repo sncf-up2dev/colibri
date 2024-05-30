@@ -267,7 +267,7 @@ public class ParcelControllerTests {
                 .getContentAsString();
         record WithId(String id) {}
         String id = objectMapper.readValue(responseStr, WithId.class).id;
-        String username = UUID.randomUUID().toString().replaceAll("-", "");
+        String username = "user_%s".formatted(UUID.randomUUID().toString().replaceAll("-", ""));
         String user = """
                 {
                     "username": "%s",
