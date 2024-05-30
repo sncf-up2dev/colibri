@@ -26,6 +26,18 @@ public class InMemCrudRepository<T extends Model> implements BaseCrudRepository<
     }
 
     @Override
+    public Page<T> retrieve(PageSpecs pageSpecs) {
+        Objects.requireNonNull(pageSpecs, "Argument pageSpecs cannot be null");
+        int skip = pageSpecs.pageNumber() * pageSpecs.pageSize();
+        List<T> result = this.data.entrySet().stream()
+                .skip(skip)
+                .limit(pageSpecs.pageSize())
+                .map(Map.Entry::getValue)
+                .toList();
+        return new Page<>(result, pageSpecs.pageNumber(), this.data.size());
+    }
+
+    @Override
     public T create(T entity) {
         this.checkForConflict(entity.getId());
         this.data.put(entity.getId(), entity);

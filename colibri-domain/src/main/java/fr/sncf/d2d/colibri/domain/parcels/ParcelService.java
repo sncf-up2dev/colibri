@@ -1,5 +1,7 @@
 package fr.sncf.d2d.colibri.domain.parcels;
 
+import fr.sncf.d2d.colibri.domain.common.Page;
+import fr.sncf.d2d.colibri.domain.common.PageSpecs;
 import fr.sncf.d2d.colibri.domain.common.Service;
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
@@ -33,6 +35,11 @@ public class ParcelService {
     public List<Parcel> retrieve() {
         this.logger.info("Retrieving all parcels.");
         return this.repository.retrieve();
+    }
+
+    public Page<Parcel> retrieve(PageSpecs pageSpecs) {
+        this.logger.info("Retrieving parcel's page number %d.".formatted(pageSpecs.pageNumber()));
+        return this.repository.retrieve(pageSpecs);
     }
 
     public void delete(String id) {

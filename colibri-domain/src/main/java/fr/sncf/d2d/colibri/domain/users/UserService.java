@@ -1,5 +1,7 @@
 package fr.sncf.d2d.colibri.domain.users;
 
+import fr.sncf.d2d.colibri.domain.common.Page;
+import fr.sncf.d2d.colibri.domain.common.PageSpecs;
 import fr.sncf.d2d.colibri.domain.common.Service;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 
@@ -32,6 +34,11 @@ public class UserService {
     public List<AppUser> retrieve() {
         this.logger.info("Retrieving all users.");
         return this.repository.retrieve();
+    }
+
+    public Page<AppUser> retrieve(PageSpecs pageSpecs) {
+        this.logger.info("Retrieving user's page number %s.".formatted(pageSpecs.pageNumber()));
+        return this.repository.retrieve(pageSpecs);
     }
 
     public void delete(String id) {

@@ -4,21 +4,25 @@ import fr.sncf.d2d.colibri.domain.common.BaseCrudRepository;
 import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.Model;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
+import fr.sncf.d2d.colibri.domain.common.Page;
+import fr.sncf.d2d.colibri.domain.common.PageSpecs;
+import fr.sncf.d2d.colibri.persistence.backbone.ListPagingCurdRepository;
 import fr.sncf.d2d.colibri.persistence.errors.MapException;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @MapException
 public abstract class JpaCrudRepository<M extends Model, E>
         implements BaseCrudRepository<M> {
 
-    protected final CrudRepository<E, String> entityRepository;
+    protected final ListPagingCurdRepository<E> entityRepository;
 
     protected JpaCrudRepository(
-            CrudRepository<E, String> entityRepository
+            ListPagingCurdRepository<E> entityRepository
     ) {
         this.entityRepository = entityRepository;
     }
@@ -34,9 +38,16 @@ public abstract class JpaCrudRepository<M extends Model, E>
 
     @Override
     public List<M> retrieve() {
-        return StreamSupport.stream(this.entityRepository.findAll().spliterator(), false)
+        return this.entityRepository.findAll().stream()
                 .map(this::toModel)
                 .toList();
+    }
+
+    @Override
+    public Page<M> retrieve(PageSpecs pageSpecs) {
+        Pageable pageable = PageRequest.of(pageSpecs.pageNumber(), pageSpecs.pageSize());
+        var page = this.entityRepository.findAll(pageable).map(this::toModel);
+        return new Page<>(page.getContent(), page.getNumber(), page.getTotalPages());
     }
 
     @Override

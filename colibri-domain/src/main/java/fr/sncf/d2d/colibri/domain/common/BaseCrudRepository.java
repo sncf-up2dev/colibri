@@ -6,6 +6,7 @@ import java.util.Optional;
 public interface BaseCrudRepository<T extends Model> {
     Optional<T> retrieve(String id);
     List<T> retrieve();
+    Page<T> retrieve(PageSpecs pageSpecs);
     T create(T model);
     void delete(String id);
     T update(T model);

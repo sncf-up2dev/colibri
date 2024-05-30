@@ -3,8 +3,8 @@ package fr.sncf.d2d.colibri.persistence;
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 import fr.sncf.d2d.colibri.domain.parcels.ParcelRepository;
+import fr.sncf.d2d.colibri.persistence.backbone.ListPagingCurdRepository;
 import fr.sncf.d2d.colibri.persistence.models.ParcelEntity;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
@@ -14,7 +14,7 @@ public class JpaParcelRepository
         extends JpaCrudRepository<Parcel, ParcelEntity>
         implements ParcelRepository {
 
-    protected JpaParcelRepository(CrudRepository<ParcelEntity, String> crudRepository) {
+    protected JpaParcelRepository(ListPagingCurdRepository<ParcelEntity> crudRepository) {
         super(crudRepository);
     }
 

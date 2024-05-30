@@ -2,8 +2,8 @@ package fr.sncf.d2d.colibri.persistence;
 
 import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserRepository;
+import fr.sncf.d2d.colibri.persistence.backbone.ListPagingCurdRepository;
 import fr.sncf.d2d.colibri.persistence.models.AppUserEntity;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -11,7 +11,7 @@ public class JpaUserRepository
         extends JpaCrudRepository<AppUser, AppUserEntity>
         implements UserRepository {
 
-    protected JpaUserRepository(CrudRepository<AppUserEntity, String> crudRepository) {
+    protected JpaUserRepository(ListPagingCurdRepository<AppUserEntity> crudRepository) {
         super(crudRepository);
     }
 
