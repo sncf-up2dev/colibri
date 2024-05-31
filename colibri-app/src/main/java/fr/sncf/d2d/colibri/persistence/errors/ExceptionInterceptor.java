@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class ExceptionInterceptor {
 
     @AfterThrowing(pointcut = "@annotation(ignore) || @within(ignore)", throwing = "ex")
-    public Object handle(MapException ignore, Throwable ex) {
+    public Object handle(MapExceptions ignore, Throwable ex) {
         throw this.map(ex);
     }
 

@@ -7,15 +7,14 @@ import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import fr.sncf.d2d.colibri.domain.common.Page;
 import fr.sncf.d2d.colibri.domain.common.PageSpecs;
 import fr.sncf.d2d.colibri.persistence.backbone.ListPagingCurdRepository;
-import fr.sncf.d2d.colibri.persistence.errors.MapException;
+import fr.sncf.d2d.colibri.persistence.errors.MapExceptions;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@MapException
+@MapExceptions
 public abstract class JpaCrudRepository<M extends Model, E>
         implements BaseCrudRepository<M> {
 
