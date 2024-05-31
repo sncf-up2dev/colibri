@@ -3,6 +3,8 @@ package fr.sncf.d2d.colibri.domain.users;
 import fr.sncf.d2d.colibri.domain.common.Base64PasswordEncryptor;
 import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
+import fr.sncf.d2d.colibri.domain.common.Page;
+import fr.sncf.d2d.colibri.domain.common.PageSpecs;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -50,6 +52,38 @@ class AppUserServiceTest {
         List<AppUser> retrieved = this.sut.retrieve();
         // Then
         assertThat(retrieved)
+                .usingComparatorForType(this::compareUsers, AppUser.class)
+                .isSubsetOf(user);
+    }
+
+    @Test
+    void testRetrieveFirstPage() {
+        // Given
+        List<AppUser> user = Stream.generate(this::randomUser).limit(10).toList();
+        user.forEach(this.sut::create);
+        // When
+        Page<AppUser> page = this.sut.retrieve(new PageSpecs(0, 4));
+        // Then
+        assertThat(page.number()).isEqualTo(0);
+        assertThat(page.size()).isEqualTo(4);
+        assertThat(page.totalPages()).isGreaterThanOrEqualTo(3);
+        assertThat(page.items())
+                .usingComparatorForType(this::compareUsers, AppUser.class)
+                .isSubsetOf(user);
+    }
+
+    @Test
+    void testRetrieveSecondPage() {
+        // Given
+        List<AppUser> user = Stream.generate(this::randomUser).limit(10).toList();
+        user.forEach(this.sut::create);
+        // When
+        Page<AppUser> page = this.sut.retrieve(new PageSpecs(1, 4));
+        // Then
+        assertThat(page.number()).isEqualTo(1);
+        assertThat(page.size()).isEqualTo(4);
+        assertThat(page.totalPages()).isGreaterThanOrEqualTo(3);
+        assertThat(page.items())
                 .usingComparatorForType(this::compareUsers, AppUser.class)
                 .isSubsetOf(user);
     }

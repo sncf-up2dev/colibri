@@ -1,6 +1,8 @@
 package fr.sncf.d2d.colibri.domain.parcels;
 
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
+import fr.sncf.d2d.colibri.domain.common.Page;
+import fr.sncf.d2d.colibri.domain.common.PageSpecs;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -47,6 +49,38 @@ class ParcelServiceTest {
         List<Parcel> retrieved = this.sut.retrieve();
         // Then
         assertThat(retrieved)
+                .usingComparatorForType(this::compareParcels, Parcel.class)
+                .isSubsetOf(parcel);
+    }
+
+    @Test
+    void testRetrieveFirstPage() {
+        // Given
+        List<Parcel> parcel = Stream.generate(this::randomParcel).limit(10).toList();
+        parcel.forEach(this.sut::create);
+        // When
+        Page<Parcel> page = this.sut.retrieve(new PageSpecs(0, 4));
+        // Then
+        assertThat(page.number()).isEqualTo(0);
+        assertThat(page.size()).isEqualTo(4);
+        assertThat(page.totalPages()).isGreaterThanOrEqualTo(3);
+        assertThat(page.items())
+                .usingComparatorForType(this::compareParcels, Parcel.class)
+                .isSubsetOf(parcel);
+    }
+
+    @Test
+    void testRetrieveSecondPage() {
+        // Given
+        List<Parcel> parcel = Stream.generate(this::randomParcel).limit(10).toList();
+        parcel.forEach(this.sut::create);
+        // When
+        Page<Parcel> page = this.sut.retrieve(new PageSpecs(1, 4));
+        // Then
+        assertThat(page.number()).isEqualTo(1);
+        assertThat(page.size()).isEqualTo(4);
+        assertThat(page.totalPages()).isGreaterThanOrEqualTo(3);
+        assertThat(page.items())
                 .usingComparatorForType(this::compareParcels, Parcel.class)
                 .isSubsetOf(parcel);
     }
