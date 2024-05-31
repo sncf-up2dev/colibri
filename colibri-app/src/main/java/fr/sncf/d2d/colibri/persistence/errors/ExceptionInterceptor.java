@@ -22,8 +22,8 @@ public class ExceptionInterceptor {
         return switch (ex) {
             case EntityExistsException e -> new ConflictException("Entity already exists", e);
             case EntityNotFoundException e -> new NotFoundException("Entity not found", e);
-            case RuntimeException e -> e.getCause() == null ? e : map(ex.getCause());
-            default -> ex.getCause() == null ? new IllegalOperationException(ex) : map(ex.getCause());
+            case RuntimeException e -> null == e.getCause() ? e : this.map(ex.getCause());
+            default -> null == ex.getCause() ? new IllegalOperationException(ex) : this.map(ex.getCause());
         };
     }
 }

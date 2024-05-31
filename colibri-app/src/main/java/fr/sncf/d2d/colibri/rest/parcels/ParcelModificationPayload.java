@@ -11,7 +11,7 @@ public class ParcelModificationPayload {
     Omissible<String> postmanId = Omissible.na();
 
     public Omissible<String> getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(Omissible<String> address) {
@@ -19,7 +19,7 @@ public class ParcelModificationPayload {
     }
 
     public Omissible<Parcel.Status> getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Omissible<Parcel.Status> status) {
@@ -27,7 +27,7 @@ public class ParcelModificationPayload {
     }
 
     public Omissible<String> getPostmanId() {
-        return postmanId;
+        return this.postmanId;
     }
 
     public void setPostmanId(Omissible<String> postmanId) {

@@ -20,11 +20,11 @@ public class JpaParcelRepository
 
     @Override
     public Parcel create(Parcel model) {
-        if (model.getId() != null) {
+        if (null != model.getId()) {
             throw new IllegalOperationException("Parcel ID cannot be provided on creation");
         }
         model.setId(UUID.randomUUID().toString());
-        return this.toModel(this.entityRepository.save(toEntity(model)));
+        return this.toModel(this.entityRepository.save(this.toEntity(model)));
     }
 
     @Override

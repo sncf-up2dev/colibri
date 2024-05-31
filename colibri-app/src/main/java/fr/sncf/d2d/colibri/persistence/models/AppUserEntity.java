@@ -20,7 +20,7 @@ public final class AppUserEntity {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -28,7 +28,7 @@ public final class AppUserEntity {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -36,7 +36,7 @@ public final class AppUserEntity {
     }
 
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     public void setRole(Role role) {

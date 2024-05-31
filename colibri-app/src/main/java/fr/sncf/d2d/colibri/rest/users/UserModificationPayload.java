@@ -9,11 +9,11 @@ public final class UserModificationPayload {
     private Omissible<@NotNull Role> role = Omissible.na();
 
     public Omissible<@Password String> getPassword() {
-        return password;
+        return this.password;
     }
 
     public Omissible<@NotNull Role> getRole() {
-        return role;
+        return this.role;
     }
 
     public void setPassword(Omissible<@Password String> password) {

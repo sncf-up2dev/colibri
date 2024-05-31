@@ -51,7 +51,7 @@ public class UserService {
         AppUser user = this.repository.retrieve(id)
                 .orElseThrow(() -> new NotFoundException("Username %s already exists".formatted(id)));
         updater.accept(user);
-        if (user.getPassword() != null) {
+        if (null != user.getPassword()) {
             user.setPassword(this.passwordEncryptor.encode(user.getPassword()));
         }
         return this.repository.update(user);

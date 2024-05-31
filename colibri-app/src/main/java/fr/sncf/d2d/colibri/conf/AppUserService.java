@@ -38,7 +38,7 @@ public class AppUserService implements UserDetailsService {
         try {
             AppUser user = Optional.ofNullable(this.configuration.superuser())
                     .filter(u -> username.equals(u.username()))
-                    .map(u -> new AppUser(u.username(), passwordEncoder.encode(u.password()), Role.ADMIN))
+                    .map(u -> new AppUser(u.username(), this.passwordEncoder.encode(u.password()), Role.ADMIN))
                     .orElseGet(() -> this.userService.retrieve(username));
             return new User(
                     user.getUsername(),

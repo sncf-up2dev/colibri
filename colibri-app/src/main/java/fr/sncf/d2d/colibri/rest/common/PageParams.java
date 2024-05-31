@@ -11,8 +11,8 @@ public record PageParams(
 
     public PageSpecs toPageSpecs() {
         return new PageSpecs(
-                page == null ? 0 : page,
-                size == null ? DEFAULT_SIZE : size
+                null == page ? 0 : this.page,
+                null == size ? DEFAULT_SIZE : this.size
         );
     }
 }

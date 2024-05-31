@@ -54,7 +54,7 @@ public abstract class JpaCrudRepository<M extends Model, E>
         if (this.entityRepository.existsById(model.getId())) {
             throw new ConflictException("Model with ID %s already exists.".formatted(model.getId()));
         }
-        return this.toModel(this.entityRepository.save(toEntity(model)));
+        return this.toModel(this.entityRepository.save(this.toEntity(model)));
     }
 
     @Override
@@ -71,6 +71,6 @@ public abstract class JpaCrudRepository<M extends Model, E>
 
     @Override
     public M save(M model) {
-        return model.getId() == null ? this.create(model) : this.update(model);
+        return null == model.getId() ? this.create(model) : this.update(model);
     }
 }

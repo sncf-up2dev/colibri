@@ -14,10 +14,10 @@ public record UserCreationPayload(
 
     @AssertTrue
     public boolean isValid() {
-        return !password.contains(username);
+        return !this.password.contains(this.username);
     }
 
     public AppUser toAppUser() {
-        return new AppUser(username, password, role);
+        return new AppUser(this.username, this.password, this.role);
     }
 }

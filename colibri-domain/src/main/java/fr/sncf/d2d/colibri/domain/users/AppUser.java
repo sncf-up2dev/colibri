@@ -23,15 +23,15 @@ public class AppUser implements Model {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     public void setPassword(String password) {

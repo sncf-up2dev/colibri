@@ -11,9 +11,9 @@ public record ParcelCreationPayload(
 
     public Parcel toParcel() {
         return Parcel.builder()
-                .address(address)
-                .weight(weight)
-                .postmanId(postmanId)
+                .address(this.address)
+                .weight(this.weight)
+                .postmanId(this.postmanId)
                 .build();
     }
 }

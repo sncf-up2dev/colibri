@@ -23,7 +23,7 @@ public final class ParcelEntity {
     String trackingCode;
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(String id) {
@@ -31,7 +31,7 @@ public final class ParcelEntity {
     }
 
     public String getAddress() {
-        return address;
+        return this.address;
     }
 
     public void setAddress(String address) {
@@ -39,7 +39,7 @@ public final class ParcelEntity {
     }
 
     public double getWeight() {
-        return weight;
+        return this.weight;
     }
 
     public void setWeight(double weight) {
@@ -47,7 +47,7 @@ public final class ParcelEntity {
     }
 
     public Parcel.Status getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(Parcel.Status status) {
@@ -55,7 +55,7 @@ public final class ParcelEntity {
     }
 
     public AppUserEntity getPostman() {
-        return postman;
+        return this.postman;
     }
 
     public void setPostman(AppUserEntity postman) {
@@ -63,7 +63,7 @@ public final class ParcelEntity {
     }
 
     public String getTrackingCode() {
-        return trackingCode;
+        return this.trackingCode;
     }
 
     public void setTrackingCode(String trackingCode) {
@@ -86,12 +86,12 @@ public final class ParcelEntity {
 
     public Parcel toParcel() {
         return Parcel.builder()
-                .id(id)
-                .address(address)
-                .weight(weight)
-                .status(status)
-                .postmanId(postman == null ? null : postman.getId())
-                .trackingCode(trackingCode)
+                .id(this.id)
+                .address(this.address)
+                .weight(this.weight)
+                .status(this.status)
+                .postmanId(null == postman ? null : this.postman.getId())
+                .trackingCode(this.trackingCode)
                 .build();
     }
 

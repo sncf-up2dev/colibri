@@ -23,7 +23,7 @@ public sealed interface Omissible<T>
 
         @Override
         public void ifAvailable(Consumer<T> consumer) {
-            consumer.accept(value);
+            consumer.accept(this.value);
         }
     }
 

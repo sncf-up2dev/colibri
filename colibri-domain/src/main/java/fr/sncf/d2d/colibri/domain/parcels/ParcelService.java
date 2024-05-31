@@ -62,7 +62,7 @@ public class ParcelService {
     public Parcel create(Parcel parcel) {
         this.logger.info("Creating new parcel.");
         byte[] bytes = new byte[24];
-        random.nextBytes(bytes);
+        this.random.nextBytes(bytes);
         String trackingCode = Base64.getUrlEncoder().encodeToString(bytes);
         parcel.setTrackingCode(trackingCode);
         return this.repository.create(parcel);
