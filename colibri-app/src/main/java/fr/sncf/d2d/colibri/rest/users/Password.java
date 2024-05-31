@@ -20,12 +20,12 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
-@NotNull
-@Pattern(regexp = ".{7,}")
+@NotNull(message = "Password cannot be omitted.")
+@Pattern(regexp = ".{7,}", message = "Password should be at least 7-character long.")
 @Constraint(validatedBy = PasswordConstraintValidator.class)
 public @interface Password {
 
-    String message() default "Not a valid username";
+    String message() default "Password cannot contain SNCF in it.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

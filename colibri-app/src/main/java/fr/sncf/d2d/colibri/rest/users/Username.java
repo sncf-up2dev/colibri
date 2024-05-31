@@ -20,8 +20,10 @@ import static java.lang.annotation.ElementType.TYPE_USE;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE })
-@NotNull
-@Pattern(regexp = "[a-zA-Z][a-zA-Z0-9_]*")
+@NotNull(message = "Username cannot be omitted.")
+@Pattern(
+        regexp = "[a-zA-Z][a-zA-Z0-9_]*",
+        message = "Username should start with a letter, and only contain alphanumeric characters or underscores.")
 @Constraint(validatedBy = {})
 public @interface Username {
 

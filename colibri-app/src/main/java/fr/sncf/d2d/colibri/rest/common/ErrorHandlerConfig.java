@@ -4,6 +4,8 @@ import fr.sncf.d2d.colibri.domain.common.ConflictException;
 import fr.sncf.d2d.colibri.domain.common.IllegalOperationException;
 import fr.sncf.d2d.colibri.domain.common.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -27,5 +29,18 @@ public class ErrorHandlerConfig {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorPayload handle(IllegalOperationException ex) {
         return ErrorPayload.of(ex);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorPayload handle(MethodArgumentNotValidException ex) {
+        if (ex.getBindingResult().getAllErrors().isEmpty()) {
+            return ErrorPayload.of(ex);
+        }
+        String[] errors = ex.getBindingResult().getAllErrors().stream().map(error -> {
+            String name = (error instanceof FieldError fieldError) ? fieldError.getField() : error.getObjectName();
+            return "In [%s]: %s".formatted(name, error.getDefaultMessage());
+        }).toArray(String[]::new);
+        return new ErrorPayload(errors);
     }
 }

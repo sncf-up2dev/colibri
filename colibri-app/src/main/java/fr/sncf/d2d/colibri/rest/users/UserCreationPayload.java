@@ -12,8 +12,8 @@ public record UserCreationPayload(
         @NotNull Role role
 ) {
 
-    @AssertTrue
-    public boolean isValid() {
+    @AssertTrue(message = "Password cannot contain username.")
+    public boolean isValidPassword() {
         return !this.password.contains(this.username);
     }
 
