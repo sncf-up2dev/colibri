@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -56,7 +58,73 @@ public class AppUserControllerTests {
                 .andExpect(status().isCreated());
         mvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", not(empty())));
+                .andExpect(jsonPath("$.result", not(empty())));
+    }
+
+    @Test
+    @WithMockUserRole(Role.ADMIN)
+    void test_get_all_pagination() throws Exception {
+        for (int i = 0; i < 7; i++) {
+            AppUser user = randomUser();
+            String body = """
+                    {
+                        "username": "%s",
+                        "password": "%s",
+                        "role": "USER"
+                    }
+                    """.formatted(user.getUsername(), user.getPassword());
+            mvc.perform(post("/users")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(body))
+                    .andExpect(status().isCreated());
+        }
+        mvc.perform(get("/users")
+                        .param("page", "0")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(3)))
+                .andExpect(jsonPath("$.page", is(0)))
+                .andExpect(jsonPath("$.size", is(3)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+        mvc.perform(get("/users")
+                        .param("page", "1")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(3)))
+                .andExpect(jsonPath("$.page", is(1)))
+                .andExpect(jsonPath("$.size", is(3)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+        mvc.perform(get("/users")
+                        .param("page", "2")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", not(empty())))
+                .andExpect(jsonPath("$.page", is(2)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+    }
+
+    @Test
+    @WithMockUserRole(Role.ADMIN)
+    void test_get_all_pagination_defaults() throws Exception {
+        for (int i = 0; i < 7; i++) {
+            AppUser user = randomUser();
+            String body = """
+                    {
+                        "username": "%s",
+                        "password": "%s",
+                        "role": "USER"
+                    }
+                    """.formatted(user.getUsername(), user.getPassword());
+            mvc.perform(post("/users")
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(body))
+                    .andExpect(status().isCreated());
+        }
+        mvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(greaterThanOrEqualTo(7))))
+                .andExpect(jsonPath("$.page", is(0)))
+                .andExpect(jsonPath("$.size", greaterThanOrEqualTo(7)));
     }
 
     @Test

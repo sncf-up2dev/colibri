@@ -1,7 +1,10 @@
 package fr.sncf.d2d.colibri.rest.users;
 
+import fr.sncf.d2d.colibri.domain.common.Page;
 import fr.sncf.d2d.colibri.domain.users.AppUser;
 import fr.sncf.d2d.colibri.domain.users.UserService;
+import fr.sncf.d2d.colibri.rest.common.PageParams;
+import fr.sncf.d2d.colibri.rest.common.PagePayload;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -36,8 +37,11 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserPayload> retrieve() {
-        return UserPayload.from(this.service.retrieve());
+    public PagePayload<UserPayload> retrieve(
+            PageParams pageParams
+    ) {
+        Page<AppUser> page = this.service.retrieve(pageParams.toPageSpecs());
+        return PagePayload.from(page, UserPayload::from);
     }
 
     @PostMapping

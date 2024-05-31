@@ -16,6 +16,9 @@ import java.util.UUID;
 
 import static fr.sncf.d2d.colibri.test.extensions.RequestPostProcessors.userRole;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +63,73 @@ public class ParcelControllerTests {
                 .andExpect(status().isCreated());
         mvc.perform(get("/parcels"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", not(empty())));
+                .andExpect(jsonPath("$.result", not(empty())));
+    }
+
+    @Test
+    @WithMockUserRole(Role.USER)
+    void test_get_all_parcels_pagination() throws Exception {
+        String address = "13 rue de Bonheur 99000 Ailleurs";
+        String body = """
+                {
+                    "address": "%s",
+                    "weight": %f
+                }
+                """.formatted(address, 3.14);
+        for (int i = 0; i < 7; i++) {
+            mvc.perform(post("/parcels")
+                            .with(userRole(Role.POSTMAN))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(body))
+                    .andExpect(status().isCreated());
+        }
+        mvc.perform(get("/parcels")
+                        .param("page", "0")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(3)))
+                .andExpect(jsonPath("$.page", is(0)))
+                .andExpect(jsonPath("$.size", is(3)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+        mvc.perform(get("/parcels")
+                        .param("page", "1")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(3)))
+                .andExpect(jsonPath("$.page", is(1)))
+                .andExpect(jsonPath("$.size", is(3)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+        mvc.perform(get("/parcels")
+                        .param("page", "2")
+                        .param("size", "3"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", not(empty())))
+                .andExpect(jsonPath("$.page", is(2)))
+                .andExpect(jsonPath("$.totalPages", greaterThanOrEqualTo(3)));
+    }
+
+    @Test
+    @WithMockUserRole(Role.USER)
+    void test_get_all_parcels_pagination_defaults() throws Exception {
+        String address = "13 rue de Bonheur 99000 Ailleurs";
+        String body = """
+                {
+                    "address": "%s",
+                    "weight": %f
+                }
+                """.formatted(address, 3.14);
+        for (int i = 0; i < 7; i++) {
+            mvc.perform(post("/parcels")
+                            .with(userRole(Role.POSTMAN))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .content(body))
+                    .andExpect(status().isCreated());
+        }
+        mvc.perform(get("/parcels"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result", hasSize(greaterThanOrEqualTo(7))))
+                .andExpect(jsonPath("$.page", is(0)))
+                .andExpect(jsonPath("$.size", greaterThanOrEqualTo(7)));
     }
 
     @Test

@@ -2,9 +2,6 @@ package fr.sncf.d2d.colibri.rest.parcels;
 
 import fr.sncf.d2d.colibri.domain.parcels.Parcel;
 
-import java.util.Collection;
-import java.util.List;
-
 public record ParcelPayload(
         String id,
         String address,
@@ -22,9 +19,5 @@ public record ParcelPayload(
                 parcel.getPostmanId(),
                 parcel.getTrackingCode()
         );
-    }
-
-    public static List<ParcelPayload> from(Collection<Parcel> parcel) {
-        return parcel.stream().map(ParcelPayload::from).toList();
     }
 }
