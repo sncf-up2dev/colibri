@@ -20,6 +20,7 @@
     <modules>
         <module>colibri-app</module>
         <module>colibri-domain</module>
+        <module>colibri-graphql</module>
     </modules>
     <dependencyManagement>
         <dependencies>

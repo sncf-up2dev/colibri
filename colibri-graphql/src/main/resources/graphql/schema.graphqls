@@ -1,0 +1,19 @@
+type Query {
+    parcels(id: ID): [Parcel]
+    users(username: String): [User]
+}
+
+type Parcel {
+    id: ID!
+    weight: Float!
+    address: String!
+    status: String!
+    postman: User
+    trackingCode: String
+}
+
+type User {
+    id: ID!
+    username: String!
+    role: String!
+}
